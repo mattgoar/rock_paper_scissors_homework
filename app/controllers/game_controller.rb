@@ -12,7 +12,10 @@ class GameController < ApplicationController
     @computer_move = computer_move
     @your_move = params["the_move"]
     @result = who_wins(@your_move, @computer_move)
-    puts @result
+    save_game(@your_move, @computer_move, @result)
+    @games = Move.all
+    # @games.delete_all
+    @gamecount = @games.count
     render("move.html.erb")
   end
 
@@ -34,11 +37,27 @@ class GameController < ApplicationController
       return "lose"
     end
   end
-end
 
+  def save_game (human, computer, result)
+    r = Move.new(user_wins:0, computer_wins:0, tie:0)
+    r.user_move = human
+    r.computer_move = computer.downcase
+    if result == "win"
+      r.user_wins = 1
+    elsif  result == "lose"
+      r.computer_wins = 1
+    else r.tie = 1
+    end
+    r.save
+  end
 
+  def get_game_stats (move)
 
-class RpsController < ApplicationController
+  end
+
+  def get_total_stats
+
+  end
 
 
 end
